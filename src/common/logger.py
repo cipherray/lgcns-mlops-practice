@@ -12,12 +12,18 @@ from sklearn.ensemble import GradientBoostingRegressor
 
 from .constants import ARTIFACT_PATH, LOG_FILEPATH
 
+# StreamHandler 에 표시할 형식
+# - 즉 터미널 창에서만 보여지는 형식
 RICH_FORMAT = "| %(filename)s:%(lineno)s\t| %(message)s"
+
+# FileHandler 에 표시할 형식
+# - 즉 파일로 저장할 형식
 FILE_HANDLER_FORMAT = (
     "[%(asctime)s]\t%(levelname)s\t | %(filename)s:%(lineno)s\t| %(message)s"
 )
 
 
+# 파일 핸들러 설정
 def get_file_handler(
     log_path: str = LOG_FILEPATH,
 ) -> logging.handlers.TimedRotatingFileHandler:
@@ -29,17 +35,25 @@ def get_file_handler(
     Returns:
         logging.handlers.TimedRotatingFileHandler: 로그 저장 파일 핸들러 객체
     """
+    # 지정된 기간(interval 1일)마다 백업함
+    # 30일치만 백업함
     file_handler = logging.handlers.TimedRotatingFileHandler(
         log_path, when="midnight", interval=1, backupCount=30, encoding="utf-8"
     )
+
+    # 저장 파일의 suffix
     file_handler.suffix = "logs-%Y%m%d"
-    # TODO: 파일 핸들러의 기본 수준을 INFO로 설정
-    
-    # TODO: 파일 핸들러의 포맷을 FILE_HANDLER_FORMAT으로 설정
-    
+
+    # 파일 핸들러의 기본 수준을 INFO로 설정
+    file_handler.setLevel(logging.INFO)
+
+    # 파일 핸들러의 포맷을 FILE_HANDLER_FORMAT으로 설정
+    file_handler.setFormatter(logging.Formatter(FILE_HANDLER_FORMAT))
+
     return file_handler
 
 
+# 스트림 핸들러 설정
 def set_logger(log_path: str = LOG_FILEPATH) -> logging.Logger:
     """로거 설정 함수
 
@@ -56,11 +70,13 @@ def set_logger(log_path: str = LOG_FILEPATH) -> logging.Logger:
     )
 
     logger = logging.getLogger("rich")
-    
-    # TODO: 로거의 기본 수준을 DEBUG 설정
-    
-    # TODO: 기본 로거에 위에서 만든 파일 핸들러를 추가
-    
+
+    # 로거의 기본 수준을 DEBUG 설정
+    logger.setLevel(logging.DEBUG)
+
+    # 기본 로거에 위에서 만든 파일 핸들러를 추가
+    logger.addHandler(get_file_handler(log_path))
+
     return logger
 
 
