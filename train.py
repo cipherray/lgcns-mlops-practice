@@ -48,11 +48,14 @@ if __name__ == "__main__":
         index=False,
     )
 
+    # GradientBoostring 을 위한 하이퍼파라미터 조합
     params_candidates = {
         "learning_rate": [0.01, 0.05, 0.1],
         "max_depth": [3, 4, 5, 6],
         "max_features": [1.0, 0.9, 0.8, 0.7],
     }
+
+    # model_candidates 를 설정하여 여러 모델 사용도 가능함
 
     # 3개씩 이루어지 48개 쌍 생성
     param_set = get_param_set(params=params_candidates)
