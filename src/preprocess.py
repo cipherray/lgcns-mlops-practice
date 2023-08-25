@@ -62,4 +62,5 @@ preprocess_pipeline = ColumnTransformer(
     remainder="passthrough",
     verbose_feature_names_out=False,
 )
+# transformer는 output이 모두 넘파이로 나오기에, 이걸 다시 판다스로 만드는 과정을 취함
 preprocess_pipeline.set_output(transform="pandas")
